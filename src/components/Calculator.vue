@@ -1,14 +1,15 @@
 <template>
   <div class="calculator-container bg-gray-800 p-4 rounded-xl shadow-lg w-[320px] mx-auto">
 		<!-- Displayコンポーネントに、displayValue(表示する値)を渡す -->
-		<Display :value="displayValue" />
+		<Display :value="output" />
 		<!-- KeypadコンポーネントにhandleButtonPressをカスタムイベントとして渡す -->
 		<Keypad @buttonClick="handleButtonClick" />
 	</div>
 </template>
   
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent} from 'vue'
+import { useCalculator } from '../composables/useCalculator'
 import Display from './Display.vue'
 import Keypad from './Keypad.vue'
 
@@ -21,15 +22,43 @@ export default defineComponent({
 	name: 'Calculator',
 	components: { Display, Keypad },
 	setup() {
-		// 表示する値に0を設定
-		const displayValue = ref('0')
+		const { output,
+			inputDigit,
+			inputDot,
+			clearAll,
+			clearEntry,
+			setOperator,
+			calculateResult,
+			undoEntry,
+		} = useCalculator()
 
 		// ボタンが押されたときの処理
-		const handleButtonClick = (key: string) => {
-			console.log('Pressed key:', key)
+		const handleButtonClick = (label: string) => {
+			// 数字ボタンの場合
+      if (!isNaN(Number(label))) {
+        inputDigit(label)
+      } else if (label === '.') {
+			// 小数点ボタンの場合
+        inputDot()
+      } else if (label === 'CA') {
+				// CAボタンの場合
+        clearAll()
+      } else if (label === 'CE') {
+				// CEボタンの場合
+        clearEntry()
+			} else if (label === 'Undo') {
+				// Undoボタンの場合
+				undoEntry()
+      } else if (['+', '-', '×', '÷'].includes(label)) {
+				// 演算子ボタンの場合
+        setOperator(label)
+			} else if (label === '=') {
+				// 計算結果ボタンの場合
+				calculateResult()
+      }
 		}
 
-		return { displayValue, handleButtonClick }
+    return { output, handleButtonClick }
 	},
 })
 </script>
