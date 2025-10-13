@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { calculate } from '@/utils/calculator';
-import { MAX_DIGIT } from '@/constants';
+import { isExceedingMaxDigit } from '@/utils/validation';
 
 /**
  * useCalculator.ts
@@ -35,9 +35,14 @@ export function useCalculator() {
       }
 
       // 最大桁数を超えた場合は処理終了(00ボタンを押した後の桁数を考慮して+1)
-      if(currentInput.value.length + 1 >= MAX_DIGIT){
+      if(isExceedingMaxDigit(currentInput.value, 1)){
         return false
       }
+    }
+
+    // 最大桁数を超えた場合は処理終了
+    if(isExceedingMaxDigit(currentInput.value)){
+      return false
     }
 
     // 現在の値が0の場合の処理
