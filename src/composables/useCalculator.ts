@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue';
 import { calculate } from '@/utils/calculator';
+import { MAX_DIGIT } from '@/constants';
 
 /**
  * useCalculator.ts
@@ -22,9 +23,9 @@ export function useCalculator() {
    * 数字ボタンが押されたときの処理
    * @param digit 押された数字
    */
-  function inputDigit(digit: string) {
+  function inputDigit(digit: string): boolean {
     // Error標示がある場合、以降の処理実行せず終了
-    if (errorMessage.value) return
+    if (errorMessage.value) return false
 
     // 00ボタンが押された場合の処理
     if (digit === '00') {
@@ -32,17 +33,26 @@ export function useCalculator() {
       if(displayValue.value === '0'){
         return false
       }
+
+      // 最大桁数を超えた場合は処理終了(00ボタンを押した後の桁数を考慮して+1)
+      if(currentInput.value.length + 1 >= MAX_DIGIT){
+        return false
+      }
     }
 
-    // 現在の値が0の場合は数字を上書き
+    // 現在の値が0の場合の処理
     if (currentInput.value === '0') {
+      // 現在の値を数字で上書き
       currentInput.value = digit
     } else {
+      // 現在の値に数字を追加
       currentInput.value += digit
     }
 
     // 表示する値を更新
     displayValue.value = currentInput.value
+
+    return true
   }
 
   /**
