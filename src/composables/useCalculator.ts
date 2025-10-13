@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue';
-//TODO:演算処理は別ファイルで実装予定
-//import { calculate } from '@/utils/calculator';
+import { calculate } from '@/utils/calculator';
 
 /**
  * useCalculator.ts
@@ -24,14 +23,8 @@ export function useCalculator() {
    * @param digit 押された数字
    */
   function inputDigit(digit: string) {
-    // Error中は無効
+    // Error標示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
-
-    // 桁数制限（12桁）
-    if (currentInput.value.replace('.', '').length >= 12) {
-      errorMessage.value = 'Digit Limit Exceeded'
-      return
-    }
 
     // 現在の値が0の場合は数字を上書き
     if (currentInput.value === '0') {
@@ -80,6 +73,21 @@ export function useCalculator() {
   }
 
   /**
+   * 計算を実行し、エラーハンドリングを行う共通関数
+   * @returns 計算結果、エラーの場合はnull
+   */
+  function executeCalculation(): string | null {
+    // calculate関数に前の値、現在の値、演算子を渡して計算実行
+    const result = calculate(previousValue.value!, currentInput.value, operator.value!)
+    // 計算結果がエラーまたは場合はエラーを格納して、処理終了
+    if(result === 'Error' ) {
+      errorMessage.value = result
+      return null
+    }
+    return result
+  }
+
+  /**
    * 演算子ボタンが押されたときの処理
    * @param nextOp 押された演算子
    */
@@ -88,23 +96,29 @@ export function useCalculator() {
     if (errorMessage.value) return
     // 現在の値がある場合は、前の値と演算子をもとに計算
     if (currentInput.value) {
+      // 前の値があり、演算子がある場合は計算を実行
       if (previousValue.value && operator.value) {
         // 計算を先に実行
         try {
-          const result = currentInput.value
-          //TODO:演算処理は別ファイルで実装予定
-          // const result = calculate(previousValue.value, currentInput.value, operator.value)
+          // 計算を実行
+          const result = executeCalculation()
+          // 計算結果がエラーの場合は処理終了
+          if (!result) return
+          // 計算結果を表示
           displayValue.value = result
-          previousValue.value = result
         } catch (e) {
+          // エラーが発生した場合はエラーを表示
           errorMessage.value = 'Error'
           return
         }
       } else {
+        // 前の値がない場合は現在の値を前の値に設定
         previousValue.value = currentInput.value
       }
+      // 現在の値をクリア
       currentInput.value = ''
     }
+    // 演算子を更新
     operator.value = nextOp
   }
 
@@ -124,15 +138,19 @@ export function useCalculator() {
    * =(計算実行ボタン)が押されたときの処理
    */
   function calculateResult() {
+    // Error中または前の値、演算子、現在の値がない場合は無効
     if (errorMessage.value || !previousValue.value || !operator.value || !currentInput.value) return
 
     try {
-      const result = currentInput.value
-      //TODO:演算処理は別ファイルで実装予定
-      // const result = calculate(previousValue.value, currentInput.value, operator.value)
+      // 計算を実行
+      const result = executeCalculation()
+      // 計算結果がエラーの場合は処理終了
+      if (!result) return
+      // 計算結果を表示
       displayValue.value = result
-      previousValue.value = null
+      // 現在の値をクリア
       currentInput.value = ''
+      // 演算子をクリア
       operator.value = null
     } catch (e) {
       errorMessage.value = 'Error'
