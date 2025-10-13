@@ -26,6 +26,14 @@ export function useCalculator() {
     // Error標示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
 
+    // 00ボタンが押された場合の処理
+    if (digit === '00') {
+      // 表示値が0の場合は処理終了
+      if(displayValue.value === '0'){
+        return false
+      }
+    }
+
     // 現在の値が0の場合は数字を上書き
     if (currentInput.value === '0') {
       currentInput.value = digit
@@ -33,6 +41,7 @@ export function useCalculator() {
       currentInput.value += digit
     }
 
+    // 表示する値を更新
     displayValue.value = currentInput.value
   }
 
