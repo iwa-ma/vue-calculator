@@ -100,13 +100,13 @@ export function useCalculator() {
    * 計算を実行し、エラーハンドリングを行う共通関数
    * @returns 計算結果、エラーの場合はnull
    */
-  function executeCalculation(): string | null {
+  function executeCalculation(): string  {
     // calculate関数に前の値、現在の値、演算子を渡して計算実行
     const result = calculate(previousValue.value!, currentInput.value, operator.value!)
-    // 計算結果がエラーまたは場合はエラーを格納して、処理終了
-    if(result === 'Error' ) {
+    // 計算結果がエラーの場合はエラー内容を格納して、処理終了(値は0を返す)
+    if(result === 'Error' || result === 'Digit Limit Exceeded') {
       errorMessage.value = result
-      return null
+      return '0'
     }
     return result
   }
@@ -127,7 +127,7 @@ export function useCalculator() {
           // 計算を実行
           const result = executeCalculation()
           // 計算結果がエラーの場合は処理終了
-          if (!result) return
+          if (errorMessage.value) return
           // 計算結果を表示
           displayValue.value = result
         } catch (e) {

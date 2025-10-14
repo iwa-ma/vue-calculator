@@ -1,4 +1,5 @@
 import Big from 'big.js'
+import { MAX_DIGIT } from '@/constants'
 
 /**
  * calculator.ts
@@ -41,8 +42,16 @@ export function calculate(a: string, b: string, operator: string): string {
         throw new Error('Unknown operator')
     }
 
+    // 結果を文字列として取得
+    const resultStr = result.toString()
+    
+    // 桁数超えの場合はエラーを返す
+    if(resultStr.length >= MAX_DIGIT){
+      return 'Digit Limit Exceeded'
+    }
+
     // 結果を文字列として返す
-    return result.toString()
+    return resultStr
   } catch (e) {
     return 'Error'
   }
