@@ -1,5 +1,6 @@
 <template>
-	<div class="display bg-black text-white text-2xl p-4 rounded-md mb-4 text-right font-mono overflow-x-auto">
+	<!-- タブレットサイズ(768px以上)の場合、フォントサイズを3xlに、それ以外の場合は2xlに設定 -->
+	<div class="display bg-black text-white text-2xl md:text-3xl lg:text-2xl p-4 md:p-8 lg:p-4 rounded-md mb-4 md:mb-8 lg:mb-4 text-right font-mono overflow-x-auto">
 		{{ value }}
 	</div>
 </template>
