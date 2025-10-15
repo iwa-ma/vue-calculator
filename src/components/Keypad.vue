@@ -1,5 +1,6 @@
 <template>
-  <div class="grid grid-cols-4 gap-2">
+	<!-- タブレットサイズ(768px以上)の場合、グリッドの列数を4に、それ以外の場合2に設定 -->
+  <div class="grid grid-cols-4 gap-2 md:gap-4 lg:gap-2">
 		<Button
 			v-for="key in keys"
 			:key="key"

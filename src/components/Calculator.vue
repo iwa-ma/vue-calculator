@@ -1,5 +1,6 @@
 <template>
-  <div class="calculator-container bg-gray-800 p-4 rounded-xl shadow-lg w-[320px] mx-auto">
+	<!-- タブレットサイズ(768px以上)の場合、幅を640pxに、それ以外の場合は320pxに設定 -->
+  <div class="calculator-container bg-gray-800 p-4 md:p-8 lg:p-4 rounded-xl shadow-lg w-[320px] md:w-[640px] lg:w-[320px] mx-auto">
 		<!-- Displayコンポーネントに、displayValue(表示する値)を渡す -->
 		<Display :value="output" />
 		<!-- KeypadコンポーネントにhandleButtonPressをカスタムイベントとして渡す -->

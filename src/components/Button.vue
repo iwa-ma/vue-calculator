@@ -1,8 +1,9 @@
 <template>
+  <!-- タブレットサイズ(768px以上)の場合、フォントサイズを3xlに、それ以外の場合はxlに設定 -->
   <button
     @click="$emit('press', label)"
     :class="[
-      'font-bold rounded-full text-xl w-16 h-16 flex items-center justify-center transition-all duration-200'
+      'font-bold rounded-full text-xl md:text-3xl lg:text-xl w-16 h-16 md:w-32 md:h-32 lg:w-16 lg:h-16 flex items-center justify-center transition-all duration-200'
     ]"
     :style="buttonStyle"
   >
@@ -43,7 +44,6 @@ export default defineComponent({
         }
       }
     })
-    
     return { buttonStyle }
   }
 })
@@ -53,6 +53,14 @@ export default defineComponent({
 button {
   border: none;
   cursor: pointer;
+  font-size: 1.25rem; /* SP/PCサイズ */
+}
+
+/* タブレットサイズ（768px以上）でフォントサイズを大きく */
+@media (min-width: 768px) and (max-width: 1023px) {
+  button {
+    font-size: 1.875rem; /* text-3xl相当 */
+  }
 }
 
 button:hover {
