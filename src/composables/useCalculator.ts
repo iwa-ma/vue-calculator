@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue';
+import type { Ref, ComputedRef } from 'vue';
 import { calculate } from '@/utils/calculator';
 import { isExceedingMaxDigit } from '@/utils/validation';
 
@@ -7,7 +8,38 @@ import { isExceedingMaxDigit } from '@/utils/validation';
  * 計算機の機能を提供するComposable
  * 計算機の表示、入力、演算を管理する
  */
-export function useCalculator() {
+
+/**
+ * useCalculator関数の戻り値型定義
+ */
+interface UseCalculatorReturn {
+  /** 表示する値 */
+  displayValue: Ref<string>;
+  /** 入力された値 */
+  currentInput: Ref<string>;
+  /** 現在の演算子 */
+  operator: Ref<string | null>;
+  /** エラー表示用 */
+  errorMessage: Ref<string | null>;
+  /** 数字ボタンが押されたときの処理 */
+  inputDigit: (digit: string) => void;
+  /** 小数点ボタンが押されたときの処理 */
+  inputDot: () => void;
+  /** CA：全クリアボタンが押されたときの処理 */
+  clearAll: () => void;
+  /** CE：クリアエントリボタンが押されたときの処理 */
+  clearEntry: () => void;
+  /** 演算子ボタンが押されたときの処理 */
+  setOperator: (nextOp: string) => void;
+  /** =(計算実行ボタン)が押されたときの処理 */
+  calculateResult: () => void;
+  /** Undoボタンが押されたときの処理 */
+  undoEntry: () => void;
+  /** 出力用（エラーがある場合はエラーを表示、そうでない場合は表示値を表示） */
+  output: ComputedRef<string>;
+}
+
+export function useCalculator(): UseCalculatorReturn {
   // 表示する値
   const displayValue = ref('0'); 
   // 入力された値
@@ -23,26 +55,26 @@ export function useCalculator() {
    * 数字ボタンが押されたときの処理
    * @param digit 押された数字
    */
-  function inputDigit(digit: string): boolean {
+  function inputDigit(digit: string): void {
     // Error標示がある場合、以降の処理実行せず終了
-    if (errorMessage.value) return false
+    if (errorMessage.value) return
 
     // 00ボタンが押された場合の処理
     if (digit === '00') {
       // 表示値が0の場合は処理終了
       if(displayValue.value === '0'){
-        return false
+        return
       }
 
       // 最大桁数を超えた場合は処理終了(00ボタンを押した後の桁数を考慮して+1)
       if(isExceedingMaxDigit(currentInput.value, 1)){
-        return false
+        return
       }
     }
 
     // 最大桁数を超えた場合は処理終了
     if(isExceedingMaxDigit(currentInput.value)){
-      return false
+      return
     }
 
     // 現在の値が0の場合の処理
@@ -56,8 +88,6 @@ export function useCalculator() {
 
     // 表示する値を更新
     displayValue.value = currentInput.value
-
-    return true
   }
 
   /**
@@ -98,9 +128,9 @@ export function useCalculator() {
 
   /**
    * 計算を実行し、エラーハンドリングを行う共通関数
-   * @returns 計算結果、エラーの場合はnull
+   * @returns 計算結果、エラーの場合は'0'
    */
-  function executeCalculation(): string  {
+  function executeCalculation(): string {
     // calculate関数に前の値、現在の値、演算子を渡して計算実行
     const result = calculate(previousValue.value!, currentInput.value, operator.value!)
     // 計算結果がエラーの場合はエラー内容を格納して、処理終了(値は0を返す)
