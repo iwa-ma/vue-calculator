@@ -37,6 +37,7 @@ export default defineComponent({
 		const handleButtonClick = (label: string) => {
 			// 数字ボタンの場合
       if (!isNaN(Number(label))) {
+			// 入力された数字ラベルを渡してinputDigit関数を実行
         inputDigit(label)
       } else if (label === '.') {
 			// 小数点ボタンの場合
