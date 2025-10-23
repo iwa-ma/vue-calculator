@@ -61,10 +61,8 @@ export function useCalculator(): UseCalculatorReturn {
 
     // 00ボタンが押された場合の処理
     if (digit === '00') {
-      // 表示値が0の場合は処理終了
-      if(displayValue.value === '0'){
-        return
-      }
+      // currentInputが空の場合は処理を実行しない
+      if (!currentInput.value) return
 
       // 最大桁数を超えた場合は処理終了(00ボタンを押した後の桁数を考慮して+1)
       if(isExceedingMaxDigit(currentInput.value, 1)){
