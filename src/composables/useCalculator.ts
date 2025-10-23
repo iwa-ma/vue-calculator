@@ -93,12 +93,21 @@ export function useCalculator(): UseCalculatorReturn {
   /**
    * 小数点ボタンが押されたときの処理
    */
-  function inputDot() {
-    // Error中は無効
+  function inputDot(): void {
+    // Error標示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
+    // currentInputが空の場合
+    if (!currentInput.value) {
+      // displayValueが計算結果表示(初期値:0以外)の場合、以降の処理実行せず終了
+      if (displayValue.value !== '0') return
+      // 初期状態の場合は0.を表示
+      currentInput.value = '0.'
+      displayValue.value = '0.'
+      return
+    }
     // 現在の値に、小数点がない場合は追加
     if (!currentInput.value.includes('.')) {
-      currentInput.value = currentInput.value ? currentInput.value + '.' : '0.'
+      currentInput.value = currentInput.value + '.'
       displayValue.value = currentInput.value
     }
   }
