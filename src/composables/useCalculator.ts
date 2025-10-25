@@ -33,8 +33,8 @@ interface UseCalculatorReturn {
   setOperator: (nextOp: string) => void;
   /** =(計算実行ボタン)が押されたときの処理 */
   calculateResult: () => void;
-  /** Undoボタンが押されたときの処理 */
-  undoEntry: () => void;
+  /** backspaceボタンが押されたときの処理 */
+  backspace: () => void;
   /** 出力用（エラーがある場合はエラーを表示、そうでない場合は表示値を表示） */
   output: ComputedRef<string>;
 }
@@ -192,11 +192,13 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * Undoボタンが押されたときの処理
+   * backspaceボタンが押されたときの処理
    */
-  function undoEntry() {
-    // Error中は無効
+  function backspace(): void {
+    // Error表示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
+    // 現在の値が空の場合（計算結果表示中など）、処理を実行しない
+    if (!currentInput.value) return
     // 現在の値を取り消し
     currentInput.value = currentInput.value.slice(0, -1)
     // 表示値を更新(すべて取り消した場合は0を表示)
@@ -244,7 +246,7 @@ export function useCalculator(): UseCalculatorReturn {
     clearEntry,
     setOperator,
     calculateResult,
-    undoEntry,
+    backspace,
     output
   }
 }
