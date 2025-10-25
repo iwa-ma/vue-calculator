@@ -128,13 +128,14 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CE：クリアエントリボタンが押されたときの処理
+   * CE：クリアエントリーボタンが押されたときの処理
    */
-  function clearEntry() {
-    // Error中は無効
+  function clearEntry(): void {
+    // Error表示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
     // 現在の値をクリア
     currentInput.value = ''
+    // 表示値を0に設定
     displayValue.value = '0'
   }
 
