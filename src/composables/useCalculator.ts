@@ -155,6 +155,28 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
+   * 計算を実行して結果を表示する共通関数
+   * @returns 計算結果、エラーの場合はnull
+   */
+  function executeAndDisplay(): string | null {
+    try {
+      // 計算を実行
+      const result = executeCalculation()
+      // エラー表示がある場合または計算結果がnullの場合は処理終了
+      if (errorMessage.value || !result) return null
+      // 計算結果を表示
+      displayValue.value = result
+      // 計算結果を返す
+      return result
+    } catch (e) {
+      // エラーを表示
+      errorMessage.value = 'Error'
+      // nullを返す
+      return null
+    }
+  }
+
+  /**
    * 演算子ボタンが押されたときの処理
    * @param nextOp 押された演算子
    */
@@ -166,20 +188,12 @@ export function useCalculator(): UseCalculatorReturn {
     if (currentInput.value) {
       // 前の値があり、演算子がある場合は計算を実行
       if (previousValue.value && operator.value) {
-        try {
-          // 計算を実行
-          const result = executeCalculation()
-          // 計算結果がエラーの場合は処理終了
-          if (errorMessage.value) return
-          // 計算結果を表示
-          displayValue.value = result
-          // 計算結果を前の値に設定
-          previousValue.value = result
-        } catch (e) {
-          // エラーが発生した場合はエラーを表示
-          errorMessage.value = 'Error'
-          return
-        }
+        // 計算を実行
+        const result = executeAndDisplay()
+        // 計算結果がエラー(null)の場合は処理終了
+        if (!result) return
+        // 計算結果を前の値に設定
+        previousValue.value = result
       } else {
         // 前の値がない場合は現在の値を前の値に設定
         previousValue.value = currentInput.value
@@ -212,20 +226,14 @@ export function useCalculator(): UseCalculatorReturn {
     // Error中または前の値、演算子、現在の値がない場合は無効
     if (errorMessage.value || !previousValue.value || !operator.value || !currentInput.value) return
 
-    try {
-      // 計算を実行
-      const result = executeCalculation()
-      // 計算結果がエラーの場合は処理終了
-      if (!result) return
-      // 計算結果を表示
-      displayValue.value = result
-      // 現在の値をクリア
-      currentInput.value = ''
-      // 演算子をクリア
-      operator.value = null
-    } catch (e) {
-      errorMessage.value = 'Error'
-    }
+    // 計算を実行
+    const result = executeAndDisplay()
+    // 計算結果がエラー(null)の場合は処理終了
+    if (!result) return
+    // 現在の値をクリア
+    currentInput.value = ''
+    // 演算子をクリア
+    operator.value = null
   }
 
   /**
