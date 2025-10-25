@@ -158,14 +158,14 @@ export function useCalculator(): UseCalculatorReturn {
    * 演算子ボタンが押されたときの処理
    * @param nextOp 押された演算子
    */
-  function setOperator(nextOp: string) {
-    // Error中は無効
+  function setOperator(nextOp: string): void {
+    // Error表示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
-    // 現在の値がある場合は、前の値と演算子をもとに計算
+    
+    // 現在の値がある場合の処理
     if (currentInput.value) {
       // 前の値があり、演算子がある場合は計算を実行
       if (previousValue.value && operator.value) {
-        // 計算を先に実行
         try {
           // 計算を実行
           const result = executeCalculation()
@@ -173,6 +173,8 @@ export function useCalculator(): UseCalculatorReturn {
           if (errorMessage.value) return
           // 計算結果を表示
           displayValue.value = result
+          // 計算結果を前の値に設定
+          previousValue.value = result
         } catch (e) {
           // エラーが発生した場合はエラーを表示
           errorMessage.value = 'Error'
