@@ -28,7 +28,7 @@ export default defineComponent({
 			'4','5','6','×',
 			'1','2','3','-', 
 			'0','00','.','+',
-			'CA','CE','Undo','=', 
+			'CA','CE','BS','=', 
 		]
 		return { keys }
 	}

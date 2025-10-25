@@ -7,7 +7,7 @@
     ]"
     :style="buttonStyle"
   >
-    {{ label }}
+    {{ label === 'BS' ? '⌫' : label }}
   </button>
 </template>
 
@@ -32,7 +32,7 @@ export default defineComponent({
           backgroundColor: '#ff9f0a', // オレンジ
           color: 'white' // 文字白
         }
-      } else if (['CA', 'CE', 'Undo'].includes(props.label)) {
+      } else if (['CA', 'CE', 'BS'].includes(props.label)) {
         return {
           backgroundColor: '#999999', // 中間グレー
           color: 'black' // 文字黒

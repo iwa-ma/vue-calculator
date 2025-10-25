@@ -30,7 +30,7 @@ export default defineComponent({
 			clearEntry,
 			setOperator,
 			calculateResult,
-			undoEntry,
+			backspace,
 		} = useCalculator()
 
 		// ボタンが押されたときの処理
@@ -48,9 +48,9 @@ export default defineComponent({
       } else if (label === 'CE') {
 				// CEボタンの場合
         clearEntry()
-			} else if (label === 'Undo') {
-				// Undoボタンの場合
-				undoEntry()
+			} else if (label === 'BS') {
+				// backspaceボタンの場合
+				backspace()
       } else if (['+', '-', '×', '÷'].includes(label)) {
 				// 演算子ボタンの場合
         setOperator(label)
