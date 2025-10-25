@@ -25,9 +25,9 @@ interface UseCalculatorReturn {
   inputDigit: (digit: string) => void;
   /** 小数点ボタンが押されたときの処理 */
   inputDot: () => void;
-  /** CA：全クリアボタンが押されたときの処理 */
+  /** CA：クリアオールボタンが押されたときの処理 */
   clearAll: () => void;
-  /** CE：クリアエントリボタンが押されたときの処理 */
+  /** CE：クリアエントリーボタンが押されたときの処理 */
   clearEntry: () => void;
   /** 演算子ボタンが押されたときの処理 */
   setOperator: (nextOp: string) => void;
@@ -56,7 +56,7 @@ export function useCalculator(): UseCalculatorReturn {
    * @param digit 押された数字
    */
   function inputDigit(digit: string): void {
-    // Error標示がある場合、以降の処理実行せず終了
+    // Error表示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
 
     // 00ボタンが押された場合の処理
@@ -92,7 +92,7 @@ export function useCalculator(): UseCalculatorReturn {
    * 小数点ボタンが押されたときの処理
    */
   function inputDot(): void {
-    // Error標示がある場合、以降の処理実行せず終了
+    // Error表示がある場合、以降の処理実行せず終了
     if (errorMessage.value) return
     // currentInputが空の場合
     if (!currentInput.value) {
