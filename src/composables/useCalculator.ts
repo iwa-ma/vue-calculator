@@ -111,14 +111,19 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CA：全クリアボタンが押されたときの処理
+   * CA：クリアオールボタンが押されたときの処理
    */
-  function clearAll() {
+  function clearAll(): void {
     // 状態を初期化する
+    // 表示値を0に設定
     displayValue.value = '0'
+    // 入力値を空に設定
     currentInput.value = ''
+    // 演算子をnullに設定
     operator.value = null
+    // 前の値をnullに設定
     previousValue.value = null
+    // エラー表示をnullに設定
     errorMessage.value = null
   }
 
