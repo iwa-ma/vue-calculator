@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
     "big.js": "^7.0.1",
@@ -15,13 +18,19 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "@types/big.js": "^6.2.2",
+    "@types/node": "^24.9.1",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/coverage-v8": "^4.0.3",
+    "@vitest/ui": "^4.0.3",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "autoprefixer": "^10.4.21",
+    "jsdom": "^27.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
     "typescript": "~5.8.3",
     "vite": "^7.1.7",
+    "vitest": "^4.0.3",
     "vue-tsc": "^3.0.7"
   }
 }
