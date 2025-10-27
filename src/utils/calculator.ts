@@ -39,7 +39,7 @@ export function calculate(a: string, b: string, operator: string): string {
         result = x.div(y)
         break
       default:
-        throw new Error('Unknown operator')
+        return 'Unknown operator'
     }
 
     // 結果を文字列として取得
