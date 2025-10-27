@@ -85,8 +85,8 @@ describe('calculate', () => {
   })
 
   describe('エラーケース', () => {
-    it('対応していない演算子を渡した場合エラーを返す(5 % 3 = Error)', () => {
-      expect(calculate('5', '3', '%')).toBe('Error')
+    it('対応していない演算子を渡した場合エラーを返す(5 % 3 = Unknown operator)', () => {
+      expect(calculate('5', '3', '%')).toBe('Unknown operator')
     })
 
     it('不正な入力でエラーを返す(abc + 3 = Error)', () => {

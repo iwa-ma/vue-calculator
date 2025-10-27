@@ -159,21 +159,14 @@ export function useCalculator(): UseCalculatorReturn {
    * @returns 計算結果、エラーの場合はnull
    */
   function executeAndDisplay(): string | null {
-    try {
-      // 計算を実行
-      const result = executeCalculation()
-      // エラー表示がある場合または計算結果がnullの場合は処理終了
-      if (errorMessage.value || !result) return null
-      // 計算結果を表示
-      displayValue.value = result
-      // 計算結果を返す
-      return result
-    } catch (e) {
-      // エラーを表示
-      errorMessage.value = 'Error'
-      // nullを返す
-      return null
-    }
+    // 計算を実行
+    const result = executeCalculation()
+    // エラー表示がある場合または計算結果がnullの場合は処理終了
+    if (errorMessage.value || !result) return null
+    // 計算結果を表示
+    displayValue.value = result
+    // 計算結果を返す
+    return result
   }
 
   /**
@@ -190,8 +183,6 @@ export function useCalculator(): UseCalculatorReturn {
       if (previousValue.value && operator.value) {
         // 計算を実行
         const result = executeAndDisplay()
-        // 計算結果がエラー(null)の場合は処理終了
-        if (!result) return
         // 計算結果を前の値に設定
         previousValue.value = result
       } else {
