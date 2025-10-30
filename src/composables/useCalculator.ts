@@ -21,19 +21,19 @@ interface UseCalculatorReturn {
   operator: Ref<string | null>;
   /** エラー表示用 */
   errorMessage: Ref<string | null>;
-  /** 数字ボタンが押されたときの処理 */
+  /** 数字ボタンが押下時の処理 */
   inputDigit: (digit: string) => void;
-  /** 小数点ボタンが押されたときの処理 */
+  /** 小数点ボタンが押下時の処理 */
   inputDot: () => void;
-  /** CA：クリアオールボタンが押されたときの処理 */
+  /** CA：クリアオールボタンが押下時の処理 */
   clearAll: () => void;
-  /** CE：クリアエントリーボタンが押されたときの処理 */
+  /** CE：クリアエントリーボタンが押下時の処理 */
   clearEntry: () => void;
-  /** 演算子ボタンが押されたときの処理 */
+  /** 演算子ボタンが押下時の処理 */
   setOperator: (nextOp: string) => void;
-  /** =(計算実行ボタン)が押されたときの処理 */
+  /** =(計算実行ボタン)が押下時の処理 */
   calculateResult: () => void;
-  /** backspaceボタンが押されたときの処理 */
+  /** backspaceボタンが押下時の処理 */
   backspace: () => void;
   /** 出力用（エラーがある場合はエラーを表示、そうでない場合は表示値を表示） */
   output: ComputedRef<string>;
@@ -52,7 +52,7 @@ export function useCalculator(): UseCalculatorReturn {
   const errorMessage = ref<string | null>(null);
 
   /**
-   * 数字ボタンが押されたときの処理
+   * 数字ボタンが押下時の処理
    * @param digit 押された数字
    */
   function inputDigit(digit: string): void {
@@ -89,7 +89,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * 小数点ボタンが押されたときの処理
+   * 小数点ボタンが押下時の処理
    */
   function inputDot(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -111,7 +111,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CA：クリアオールボタンが押されたときの処理
+   * CA：クリアオールボタンが押下時の処理
    */
   function clearAll(): void {
     // 状態を初期化する
@@ -128,7 +128,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CE：クリアエントリーボタンが押されたときの処理
+   * CE：クリアエントリーボタンが押下時の処理
    */
   function clearEntry(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -170,7 +170,15 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * 演算子ボタンが押されたときの処理
+   * 計算結果表示状態で、演算子未選択かつ入力中でないかを判定
+   * currentInputが空、displayValueが0以外、operatorがnullのときtrue
+   */
+  function shouldUseDisplayAsPrevious(): boolean {
+    return !currentInput.value && !!displayValue.value && displayValue.value !== '0' && !operator.value
+  }
+
+  /**
+   * 演算子ボタンが押下時の処理
    * @param nextOp 押された演算子
    */
   function setOperator(nextOp: string): void {
@@ -191,13 +199,16 @@ export function useCalculator(): UseCalculatorReturn {
       }
       // 現在の値をクリア
       currentInput.value = ''
+    } else if (shouldUseDisplayAsPrevious()) {
+      // 表示されている値を前の値に設定（再計算のため）
+      previousValue.value = displayValue.value
     }
     // 演算子を更新
     operator.value = nextOp
   }
 
   /**
-   * backspaceボタンが押されたときの処理
+   * backspaceボタンが押下時の処理
    */
   function backspace(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -211,7 +222,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * =(計算実行ボタン)が押されたときの処理
+   * =(計算実行ボタン)が押下時の処理
    */
   function calculateResult() {
     // Error中または前の値、演算子、現在の値がない場合は無効
@@ -221,6 +232,8 @@ export function useCalculator(): UseCalculatorReturn {
     const result = executeAndDisplay()
     // 計算結果がエラー(null)の場合は処理終了
     if (!result) return
+    // 計算結果を前の値に設定（再計算時に使用）
+    previousValue.value = result
     // 現在の値をクリア
     currentInput.value = ''
     // 演算子をクリア
@@ -233,7 +246,7 @@ export function useCalculator(): UseCalculatorReturn {
    */
   const output = computed(() => errorMessage.value ?? displayValue.value)
 
-  // ボタンが押されたときの処理
+  // ボタンが押下時の処理を返す
   return {
     displayValue,
     currentInput,
