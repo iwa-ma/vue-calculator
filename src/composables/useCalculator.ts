@@ -170,6 +170,14 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
+   * 計算結果表示状態で、演算子未選択かつ入力中でないかを判定
+   * currentInputが空、displayValueが0以外、operatorがnullのときtrue
+   */
+  function shouldUseDisplayAsPrevious(): boolean {
+    return !currentInput.value && !!displayValue.value && displayValue.value !== '0' && !operator.value
+  }
+
+  /**
    * 演算子ボタンが押されたときの処理
    * @param nextOp 押された演算子
    */
@@ -191,6 +199,9 @@ export function useCalculator(): UseCalculatorReturn {
       }
       // 現在の値をクリア
       currentInput.value = ''
+    } else if (shouldUseDisplayAsPrevious()) {
+      // 表示されている値を前の値に設定（再計算のため）
+      previousValue.value = displayValue.value
     }
     // 演算子を更新
     operator.value = nextOp
@@ -221,6 +232,8 @@ export function useCalculator(): UseCalculatorReturn {
     const result = executeAndDisplay()
     // 計算結果がエラー(null)の場合は処理終了
     if (!result) return
+    // 計算結果を前の値に設定（再計算時に使用）
+    previousValue.value = result
     // 現在の値をクリア
     currentInput.value = ''
     // 演算子をクリア

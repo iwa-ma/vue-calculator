@@ -213,6 +213,44 @@ describe('useCalculator', () => {
       expect(calculator.operator.value).toBe('+')
       expect(calculator.currentInput.value).toBe('')
     })
+
+    it('計算結果表示状態で演算子を押すと、表示値が前の値(previousValue)として使用される(18 → 18 ×)', () => {
+      // 計算結果を表示状態にする
+      calculator.displayValue.value = '18'
+      // 現在の値をクリア
+      calculator.currentInput.value = ''
+      // 演算子を未選択にする
+      calculator.operator.value = null
+      
+      // 演算子を設定
+      calculator.setOperator('×')
+      
+      // 新しい値を入力して計算
+      calculator.inputDigit('3')
+      calculator.calculateResult()
+      
+      // 18 × 3 = 54 になることを確認
+      expect(calculator.displayValue.value).toBe('54')
+    })
+
+    it('初期状態(0表示)では演算子を押しても前の値が設定されない', () => {
+      // 初期状態
+      calculator.displayValue.value = '0'
+      calculator.currentInput.value = ''
+      calculator.operator.value = null
+      
+      // 演算子を設定
+      calculator.setOperator('+')
+      
+      // 値を入力
+      calculator.inputDigit('5')
+      calculator.setOperator('+')
+      calculator.inputDigit('3')
+      calculator.calculateResult()
+      
+      // 0 + 5 + 3 = 8 ではなく、5 + 3 = 8 になることを確認
+      expect(calculator.displayValue.value).toBe('8')
+    })
   })
 
   describe('calculateResult', () => {
@@ -273,6 +311,53 @@ describe('useCalculator', () => {
       calculator.calculateResult()
       // エラー状態では計算が実行されないため、現在の値が保持される
       expect(calculator.displayValue.value).toBe('3')
+    })
+
+    it('計算実行後、計算結果がpreviousValueに保存される(3 × 6 = 18)', () => {
+      calculator.inputDigit('3')
+      calculator.setOperator('×')
+      calculator.inputDigit('6')
+      calculator.calculateResult()
+      // 計算結果が表示される
+      expect(calculator.displayValue.value).toBe('18')
+      // 計算結果がpreviousValueに保存される（内部状態を直接確認するため、次の計算で検証）
+      calculator.setOperator('×')
+      calculator.inputDigit('3')
+      calculator.calculateResult()
+      // 18 × 3 = 54 になることを確認（previousValueが正しく保存されていれば）
+      expect(calculator.displayValue.value).toBe('54')
+    })
+
+    it('計算実行後の再計算が正しく動作する(3 × 6 = 18, その後 × 3 = 54)', () => {
+      calculator.inputDigit('3')
+      calculator.setOperator('×')
+      calculator.inputDigit('6')
+      calculator.calculateResult()
+      expect(calculator.displayValue.value).toBe('18')
+      
+      // 計算結果表示状態で新しい演算子を設定
+      calculator.setOperator('×')
+      calculator.inputDigit('3')
+      calculator.calculateResult()
+      
+      // 18 × 3 = 54 になることを確認
+      expect(calculator.displayValue.value).toBe('54')
+    })
+
+    it('計算実行後の再計算が正しく動作する(10 + 5 = 15, その後 - 3 = 12)', () => {
+      calculator.inputDigit('10')
+      calculator.setOperator('+')
+      calculator.inputDigit('5')
+      calculator.calculateResult()
+      expect(calculator.displayValue.value).toBe('15')
+      
+      // 計算結果表示状態で新しい演算子を設定
+      calculator.setOperator('-')
+      calculator.inputDigit('3')
+      calculator.calculateResult()
+      
+      // 15 - 3 = 12 になることを確認
+      expect(calculator.displayValue.value).toBe('12')
     })
   })
 
