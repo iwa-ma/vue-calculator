@@ -21,19 +21,19 @@ interface UseCalculatorReturn {
   operator: Ref<string | null>;
   /** エラー表示用 */
   errorMessage: Ref<string | null>;
-  /** 数字ボタンが押されたときの処理 */
+  /** 数字ボタンが押下時の処理 */
   inputDigit: (digit: string) => void;
-  /** 小数点ボタンが押されたときの処理 */
+  /** 小数点ボタンが押下時の処理 */
   inputDot: () => void;
-  /** CA：クリアオールボタンが押されたときの処理 */
+  /** CA：クリアオールボタンが押下時の処理 */
   clearAll: () => void;
-  /** CE：クリアエントリーボタンが押されたときの処理 */
+  /** CE：クリアエントリーボタンが押下時の処理 */
   clearEntry: () => void;
-  /** 演算子ボタンが押されたときの処理 */
+  /** 演算子ボタンが押下時の処理 */
   setOperator: (nextOp: string) => void;
-  /** =(計算実行ボタン)が押されたときの処理 */
+  /** =(計算実行ボタン)が押下時の処理 */
   calculateResult: () => void;
-  /** backspaceボタンが押されたときの処理 */
+  /** backspaceボタンが押下時の処理 */
   backspace: () => void;
   /** 出力用（エラーがある場合はエラーを表示、そうでない場合は表示値を表示） */
   output: ComputedRef<string>;
@@ -52,7 +52,7 @@ export function useCalculator(): UseCalculatorReturn {
   const errorMessage = ref<string | null>(null);
 
   /**
-   * 数字ボタンが押されたときの処理
+   * 数字ボタンが押下時の処理
    * @param digit 押された数字
    */
   function inputDigit(digit: string): void {
@@ -89,7 +89,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * 小数点ボタンが押されたときの処理
+   * 小数点ボタンが押下時の処理
    */
   function inputDot(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -111,7 +111,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CA：クリアオールボタンが押されたときの処理
+   * CA：クリアオールボタンが押下時の処理
    */
   function clearAll(): void {
     // 状態を初期化する
@@ -128,7 +128,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * CE：クリアエントリーボタンが押されたときの処理
+   * CE：クリアエントリーボタンが押下時の処理
    */
   function clearEntry(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -178,7 +178,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * 演算子ボタンが押されたときの処理
+   * 演算子ボタンが押下時の処理
    * @param nextOp 押された演算子
    */
   function setOperator(nextOp: string): void {
@@ -208,7 +208,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * backspaceボタンが押されたときの処理
+   * backspaceボタンが押下時の処理
    */
   function backspace(): void {
     // Error表示がある場合、以降の処理実行せず終了
@@ -222,7 +222,7 @@ export function useCalculator(): UseCalculatorReturn {
   }
 
   /**
-   * =(計算実行ボタン)が押されたときの処理
+   * =(計算実行ボタン)が押下時の処理
    */
   function calculateResult() {
     // Error中または前の値、演算子、現在の値がない場合は無効
@@ -246,7 +246,7 @@ export function useCalculator(): UseCalculatorReturn {
    */
   const output = computed(() => errorMessage.value ?? displayValue.value)
 
-  // ボタンが押されたときの処理
+  // ボタンが押下時の処理を返す
   return {
     displayValue,
     currentInput,
