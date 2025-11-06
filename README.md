@@ -38,6 +38,9 @@
 ## 公開URL
 https://vue-calculator-5d7a5.web.app/
 
+## Zenn記事
+[0.2×0.2が0.04000000000000001？ Big.jsで精度問題を検証してみた](https://zenn.dev/iw_mari/articles/c700db8981fb84)
+
 ## 開発環境の準備
 1. このリポジトリをclone
 ```bash
